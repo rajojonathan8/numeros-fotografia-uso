@@ -423,3 +423,374 @@ background:#991b1b;
   cursor: not-allowed;
   opacity: 0.65;
 }
+
+/* =====================================================
+   PANEL ADMINISTRATIVO
+===================================================== */
+
+.pagina-admin {
+  width: 100%;
+  padding: 32px 18px;
+  align-items: flex-start;
+}
+
+.panel-admin {
+  width: min(1450px, 100%);
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 18px 50px rgba(17, 24, 39, 0.12);
+}
+
+.admin-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-encabezado h1 {
+  margin: 6px 0 8px;
+}
+
+.admin-resumen {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.total-registros {
+  min-width: 140px;
+  padding: 14px 20px;
+  text-align: center;
+  background: #f3f4f6;
+  border-radius: 16px;
+}
+
+.total-registros span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+.total-registros strong {
+  display: block;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: #111827;
+}
+
+.boton-cerrar-sesion {
+  width: auto;
+  background: #374151;
+}
+
+.boton-cerrar-sesion:hover {
+  background: #1f2937;
+}
+
+.admin-acciones {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.buscador-admin {
+  flex: 1;
+}
+
+.buscador-admin label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.buscador-admin input {
+  width: 100%;
+}
+
+.botones-admin {
+  display: flex;
+  gap: 10px;
+}
+
+.botones-admin button {
+  width: auto;
+  white-space: nowrap;
+}
+
+.boton-actualizar {
+  background: #374151;
+}
+
+.boton-actualizar:hover {
+  background: #1f2937;
+}
+
+.resultado-busqueda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 40px;
+  margin-bottom: 16px;
+  padding: 8px 4px;
+  color: #6b7280;
+}
+
+.boton-limpiar {
+  width: auto;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.boton-limpiar:hover {
+  background: #f3f4f6;
+}
+
+.tabla-contenedor {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+
+.tabla-registros {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1050px;
+}
+
+.tabla-registros th {
+  padding: 15px 14px;
+  text-align: left;
+  background: #111827;
+  color: #ffffff;
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+.tabla-registros td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.tabla-registros tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-registros tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.tabla-registros tbody tr:hover {
+  background: #f3f4f6;
+}
+
+.numero-tabla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-weight: 800;
+}
+
+.nombre-participante {
+  color: #111827;
+}
+
+.telefono-admin {
+  color: #1d4ed8;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.telefono-admin:hover {
+  text-decoration: underline;
+}
+
+.btn-eliminar {
+  width: auto;
+  padding: 9px 13px;
+  border: none;
+  border-radius: 9px;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.btn-eliminar:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.btn-eliminar:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.estado-admin {
+  padding: 45px 20px;
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 15px;
+}
+
+/* =====================================================
+   VERSIÓN PARA CELULARES
+===================================================== */
+
+@media (max-width: 800px) {
+  .pagina-admin {
+    padding: 14px 10px;
+  }
+
+  .panel-admin {
+    padding: 18px 12px;
+    border-radius: 16px;
+  }
+
+  .admin-encabezado {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-resumen {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .total-registros {
+    width: 100%;
+  }
+
+  .boton-cerrar-sesion {
+    width: 100%;
+  }
+
+  .admin-acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .botones-admin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .botones-admin button {
+    width: 100%;
+  }
+
+  .resultado-busqueda {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .boton-limpiar {
+    width: 100%;
+  }
+
+  .tabla-contenedor {
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+  }
+
+  .tabla-registros {
+    min-width: 0;
+  }
+
+  .tabla-registros thead {
+    display: none;
+  }
+
+  .tabla-registros,
+  .tabla-registros tbody,
+  .tabla-registros tr,
+  .tabla-registros td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-registros tbody {
+    display: grid;
+    gap: 16px;
+  }
+
+  .tabla-registros tr {
+    overflow: hidden;
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
+  }
+
+  .tabla-registros tr:hover {
+    background: #ffffff;
+  }
+
+  .tabla-registros td {
+    display: grid;
+    grid-template-columns: 115px 1fr;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eef0f3;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .tabla-registros td::before {
+    content: attr(data-label);
+    text-align: left;
+    font-weight: 800;
+    color: #6b7280;
+  }
+
+  .tabla-registros td:first-child {
+    padding-top: 16px;
+    background: #f9fafb;
+  }
+
+  .tabla-registros td:last-child {
+    padding-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .numero-tabla {
+    justify-self: end;
+  }
+
+  .btn-eliminar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 450px) {
+  .botones-admin {
+    grid-template-columns: 1fr;
+  }
+
+  .tabla-registros td {
+    grid-template-columns: 95px 1fr;
+    padding: 11px 12px;
+    font-size: 0.9rem;
+  }
+}

@@ -29,12 +29,15 @@ function Admin() {
     sessionStorage.setItem("admin_autorizado", "true");
     setAutorizado(true);
     setErrorAcceso("");
+    setClave("");
   };
 
   const cerrarSesion = () => {
     sessionStorage.removeItem("admin_autorizado");
     setAutorizado(false);
     setClave("");
+    setRegistros([]);
+    setBusqueda("");
   };
 
   const cargarRegistros = async () => {
@@ -74,11 +77,18 @@ function Admin() {
     }
 
     return registros.filter((registro) => {
+      const numero = String(registro.numero || "");
+      const nombre = String(registro.nombre || "").toLowerCase();
+      const facultad = String(registro.facultad || "").toLowerCase();
+      const carrera = String(registro.carrera || "").toLowerCase();
+      const telefono = String(registro.telefono || "").toLowerCase();
+
       return (
-        String(registro.numero).includes(texto) ||
-        registro.nombre.toLowerCase().includes(texto) ||
-        registro.carrera.toLowerCase().includes(texto) ||
-        registro.telefono.includes(texto)
+        numero.includes(texto) ||
+        nombre.includes(texto) ||
+        facultad.includes(texto) ||
+        carrera.includes(texto) ||
+        telefono.includes(texto)
       );
     });
   }, [busqueda, registros]);
@@ -87,17 +97,21 @@ function Admin() {
     const encabezados = [
       "Número",
       "Nombre",
+      "Facultad",
       "Carrera",
       "Teléfono",
       "Fecha",
     ];
 
-    const filas = registros.map((registro) => [
-      String(registro.numero).padStart(3, "0"),
-      registro.nombre,
-      registro.carrera,
-      registro.telefono,
-      new Date(registro.created_at).toLocaleString("es-SV"),
+    const filas = registrosFiltrados.map((registro) => [
+      String(registro.numero || "").padStart(3, "0"),
+      registro.nombre || "",
+      registro.facultad || "Sin facultad registrada",
+      registro.carrera || "",
+      registro.telefono || "",
+      registro.created_at
+        ? new Date(registro.created_at).toLocaleString("es-SV")
+        : "",
     ]);
 
     const contenido = [encabezados, ...filas]
@@ -147,12 +161,12 @@ function Admin() {
         throw errorEliminar;
       }
 
-      // Lo elimina inmediatamente de la tabla visible.
       setRegistros((registrosActuales) =>
         registrosActuales.filter((registro) => registro.id !== id)
       );
     } catch (err) {
       console.error("Error al eliminar:", err);
+
       setError(
         "No se pudo eliminar el registro. Revisa la política DELETE de Supabase."
       );
@@ -209,20 +223,20 @@ function Admin() {
   return (
     <main className="pagina pagina-admin">
       <section className="panel-admin">
-        <div className="admin-encabezado">
+        <header className="admin-encabezado">
           <div>
             <p className="institucion">Universidad de Sonsonate</p>
 
             <h1>Panel de registros</h1>
 
             <p className="descripcion">
-              Consulta y exporta los participantes registrados.
+              Consulta, busca, exporta y administra los participantes.
             </p>
           </div>
 
           <div className="admin-resumen">
             <div className="total-registros">
-              <span>Total</span>
+              <span>Total de registros</span>
               <strong>{registros.length}</strong>
             </div>
 
@@ -234,32 +248,56 @@ function Admin() {
               Cerrar sesión
             </button>
           </div>
-        </div>
+        </header>
 
         <div className="admin-acciones">
-          <input
-            type="search"
-            placeholder="Buscar por número, nombre, carrera o teléfono"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-          />
+          <div className="buscador-admin">
+            <label htmlFor="busqueda">Buscar participante</label>
 
-          <button
-            type="button"
-            onClick={descargarCSV}
-            disabled={registros.length === 0}
-          >
-            Descargar CSV
-          </button>
+            <input
+              id="busqueda"
+              type="search"
+              placeholder="Número, nombre, facultad, carrera o teléfono"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
+          </div>
 
-          <button
-            type="button"
-            className="boton-actualizar"
-            onClick={cargarRegistros}
-            disabled={cargando}
-          >
-            {cargando ? "Actualizando..." : "Actualizar"}
-          </button>
+          <div className="botones-admin">
+            <button
+              type="button"
+              onClick={descargarCSV}
+              disabled={registrosFiltrados.length === 0}
+            >
+              Descargar CSV
+            </button>
+
+            <button
+              type="button"
+              className="boton-actualizar"
+              onClick={cargarRegistros}
+              disabled={cargando}
+            >
+              {cargando ? "Actualizando..." : "Actualizar"}
+            </button>
+          </div>
+        </div>
+
+        <div className="resultado-busqueda">
+          <span>
+            Mostrando <strong>{registrosFiltrados.length}</strong> de{" "}
+            <strong>{registros.length}</strong> registros
+          </span>
+
+          {busqueda && (
+            <button
+              type="button"
+              className="boton-limpiar"
+              onClick={() => setBusqueda("")}
+            >
+              Limpiar búsqueda
+            </button>
+          )}
         </div>
 
         {error && (
@@ -271,7 +309,9 @@ function Admin() {
         {cargando ? (
           <p className="estado-admin">Cargando registros...</p>
         ) : registrosFiltrados.length === 0 ? (
-          <p className="estado-admin">No se encontraron registros.</p>
+          <p className="estado-admin">
+            No se encontraron registros.
+          </p>
         ) : (
           <div className="tabla-contenedor">
             <table className="tabla-registros">
@@ -279,6 +319,7 @@ function Admin() {
                 <tr>
                   <th>N.º</th>
                   <th>Nombre</th>
+                  <th>Facultad</th>
                   <th>Carrera</th>
                   <th>Teléfono</th>
                   <th>Fecha y hora</th>
@@ -287,44 +328,76 @@ function Admin() {
               </thead>
 
               <tbody>
-                {registrosFiltrados.map((registro) => (
-                  <tr key={registro.id}>
-                    <td>
-                      {String(registro.numero).padStart(3, "0")}
-                    </td>
+                {registrosFiltrados.map((registro) => {
+                  const numeroFormateado = String(
+                    registro.numero || ""
+                  ).padStart(3, "0");
 
-                    <td>{registro.nombre}</td>
+                  const fechaFormateada = registro.created_at
+                    ? new Date(
+                        registro.created_at
+                      ).toLocaleString("es-SV")
+                    : "Sin fecha";
 
-                    <td>{registro.carrera}</td>
+                  return (
+                    <tr key={registro.id}>
+                      <td data-label="Número">
+                        <span className="numero-tabla">
+                          {numeroFormateado}
+                        </span>
+                      </td>
 
-                    <td>{registro.telefono}</td>
+                      <td data-label="Nombre">
+                        <strong className="nombre-participante">
+                          {registro.nombre}
+                        </strong>
+                      </td>
 
-                    <td>
-                      {new Date(registro.created_at).toLocaleString(
-                        "es-SV"
-                      )}
-                    </td>
+                      <td data-label="Facultad">
+                        {registro.facultad ||
+                          "Sin facultad registrada"}
+                      </td>
 
-                    <td>
-                      <button
-                        type="button"
-                        className="btn-eliminar"
-                        onClick={() =>
-                          eliminarRegistro(
-                            registro.id,
-                            registro.nombre
-                          )
-                        }
-                        disabled={eliminandoId === registro.id}
-                        title={`Eliminar a ${registro.nombre}`}
-                      >
-                        {eliminandoId === registro.id
-                          ? "Eliminando..."
-                          : "🗑 Eliminar"}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      <td data-label="Carrera">
+                        {registro.carrera}
+                      </td>
+
+                      <td data-label="Teléfono">
+                        <a
+                          className="telefono-admin"
+                          href={`tel:${registro.telefono}`}
+                        >
+                          {registro.telefono}
+                        </a>
+                      </td>
+
+                      <td data-label="Fecha y hora">
+                        {fechaFormateada}
+                      </td>
+
+                      <td data-label="Acciones">
+                        <button
+                          type="button"
+                          className="btn-eliminar"
+                          onClick={() =>
+                            eliminarRegistro(
+                              registro.id,
+                              registro.nombre
+                            )
+                          }
+                          disabled={
+                            eliminandoId === registro.id
+                          }
+                          title={`Eliminar a ${registro.nombre}`}
+                        >
+                          {eliminandoId === registro.id
+                            ? "Eliminando..."
+                            : "🗑 Eliminar"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
